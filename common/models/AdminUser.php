@@ -4,7 +4,7 @@ namespace common\models;
 
 use yii\web\IdentityInterface;
 
-class Admin extends BaseModel implements IdentityInterface
+class AdminUser extends BaseModel implements IdentityInterface
 {
     public $id;
     public $username;
@@ -18,13 +18,6 @@ class Admin extends BaseModel implements IdentityInterface
             'password' => 'admin',
             'authKey' => 'test100key',
             'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
         ],
     ];
     /**

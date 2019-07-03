@@ -3,14 +3,12 @@
 namespace app\controllers;
 
 use Yii;
-use yii\filters\AccessControl;
-use yii\web\Controller;
 use yii\web\Response;
-use yii\filters\VerbFilter;
 use common\models\LoginForm;
+use yii\filters\AccessControl;
 use common\models\ContactForm;
 
-class SiteController extends Controller
+class SiteController extends BaseController
 {
     /**
      * {@inheritdoc}
@@ -18,21 +16,20 @@ class SiteController extends Controller
     public function behaviors()
     {
         return [
+            \common\components\PermissionBehavior::className(),
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
                 'rules' => [
                     [
-                        'actions' => ['logout'],
                         'allow' => true,
+                        'actions' => ['logout'],
                         'roles' => ['@'],
                     ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
+                    [
+                        'allow' => true,
+                        'actions' => ['login', 'index'],
+                        'roles' => ['?'],
+                    ],
                 ],
             ],
         ];
@@ -49,7 +46,7 @@ class SiteController extends Controller
             ],
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+                'fixedVerifyCode' => YII_ENV_TEST ? '1234' : null,
             ],
         ];
     }
@@ -61,6 +58,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        exit('aa');
         return $this->render('index');
     }
 
@@ -77,6 +75,7 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            Yii::$app->user->returnUrl = 'index';
             return $this->goBack();
         }
 
